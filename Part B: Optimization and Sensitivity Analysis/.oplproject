@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?><project>
+    	
+    <version>1.0</version>
+    	
+    <configs>
+        		
+        <config default="true" name="Part a" category="opl">
+            			
+            <ref name="part_a_cplex.mod" type="model">
+			</ref>
+            			
+            <ref name="cplex .dat" type="data">
+			</ref>
+            		
+        </config>
+        		
+        <config default="false" name="Part b" category="opl">
+            			
+            <ref name="part_b_cplex.mod" type="model">
+			</ref>
+            			
+            <ref name="cplex .dat" type="data">
+			</ref>
+            		
+        </config>
+        	
+    </configs>
+    	
+
+</project>
