@@ -1,2 +1,2 @@
 # IE_202_Spring2023_Modelling_Project
-Modelling and optimization project.
+Bilkent University, IE-202 Optimization and Modelling course's term project. Part A including the case scenerio which requires a linear model at first. Then in the Part B, coding it into 3 different solvers Xpress, Cplex, Phyton Gurobi and conducting a sensitivity analysis through MS Excel took place. This project is done by me and Burak Ünal and Dilara Demir.
