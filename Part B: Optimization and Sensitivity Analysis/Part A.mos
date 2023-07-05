@@ -1,0 +1,180 @@
+model ModelName
+  options noimplicit
+  uses "mmxprs"
+
+  declarations
+  !Sets and Indices
+  Employee_Types=1..6
+  Department_Types=1..8
+  Number_of_employees=1..20
+  Number_of_projects=1..10
+  Difficulty_level=1..3
+
+  !Parameters
+  et_tk : array(Employee_Types,Number_of_employees) of real
+  R_i : array(Number_of_projects) of real
+  G_j : array(Difficulty_level) of real
+  S_t : array(Employee_Types)of real
+  ub_ti:array(Employee_Types,Number_of_projects) of real
+  lb_ti:array(Employee_Types,Number_of_projects) of real
+  d_ij:array(Number_of_projects,Difficulty_level) of real
+  a_im:array(Number_of_projects,Department_Types) of real
+  L = 2
+  P = 1500
+  H = 280
+  !Decision Variables
+  x:array(Number_of_projects,Department_Types) of mpvar
+  e:array(Number_of_employees,Number_of_projects) of mpvar
+  b:array(Number_of_projects) of mpvar
+  y:array(Number_of_employees) of mpvar
+  o:array(Number_of_projects,Number_of_employees) of mpvar
+  w:array(Number_of_projects) of mpvar
+  profit: mpvar
+    ! ...
+    Objective:linctr
+  end-declarations
+
+  !Parameters
+
+  R_i :: [250, 1800, 1050, 3550, 550, 3600, 700, 3650, 1350, 2800]
+  et_tk ::[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
+          0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
+          0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+          0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0,
+          0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+          1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+  G_j :: [10000,50000,800000]
+  S_t ::[8000,16000,24000,32000,40000,48000]
+  ub_ti::[2, 2, 2, 3, 3, 3, 3, 3, 2, 3,
+          3, 2, 3, 2, 3, 3, 3, 2, 2, 2,
+          2, 2, 2, 3, 2, 2, 2, 2, 3, 2,
+          3, 2, 3, 2, 2, 2, 3, 2, 3, 3,
+          2, 3, 2, 2, 2, 3, 3, 2, 3, 3,
+          2, 3, 3, 2, 3, 2, 2, 2, 3, 3]
+  lb_ti::[1, 1, 1, 1, 1, 1, 1, 0, 1, 0,
+          0, 1, 0, 1, 0, 0, 0, 1, 1, 0,
+          1, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+          1, 0, 0, 1, 1, 0, 1, 0, 1, 1,
+          0, 1, 1, 0, 1, 1, 0, 0, 1, 1,
+          0, 1, 1, 0, 0, 1, 0, 0, 1, 1]
+
+  d_ij ::[1, 0, 0,
+          0, 1, 0,
+          0, 1, 0,
+          0, 0, 1,
+          1, 0, 0,
+          0, 0, 1,
+          1, 0, 0,
+          0, 0, 1,
+          0, 1, 0,
+          0, 0, 1]
+  a_im ::[0, 0, 0, 0, 1, 0, 1, 1,
+          1, 1, 1, 0, 1, 0, 0, 1,
+          0, 1, 1, 1, 0, 1, 1, 1,
+          1, 1, 0, 0, 1, 1, 0, 0,
+          0, 0, 0, 0, 1, 1, 0, 0,
+          1, 0, 0, 1, 1, 1, 1, 1,
+          0, 0, 1, 1, 1, 0, 1, 1,
+          1, 0, 0, 0, 1, 1, 1, 0,
+          0, 0, 1, 0, 1, 1, 1, 1,
+          1, 0, 1, 1, 0, 1, 0, 1]
+  !Constraints
+  
+  
+  forall(k in Number_of_employees)
+    sum(i in Number_of_projects) e(k,i) >= 1
+
+  forall(k in Number_of_employees)
+    sum(i in Number_of_projects) e(k,i) <= 5
+
+  forall(i in Number_of_projects, t in Employee_Types)
+    sum(k in Number_of_employees) (e(k,i)*et_tk(t,k)) <= ub_ti(t,i)
+
+  forall(i in Number_of_projects, t in Employee_Types)
+    sum(k in Number_of_employees) e(k,i)*et_tk(t,k) >= lb_ti(t,i)
+
+  forall(m in Department_Types)
+    sum(i in Number_of_projects) x(i,m) >=1
+
+  forall(i in Number_of_projects) ! body...
+    sum(m in Department_Types) x(i,m) <= 1
+
+  sum(i in Number_of_projects) (x(i,1)- x(i,2)) <= L
+
+  sum(i in Number_of_projects) (x(i,2)- x(i,1)) <= L
+
+  forall(k in Number_of_employees)
+    y(k) * 8 * 30 + sum(i in Number_of_projects) o(i,k) <= H
+
+  forall(k in Number_of_employees)
+    y(k) <= sum(i in Number_of_projects) e(k,i)
+
+  forall(k in Number_of_employees)
+    y(k)*10 >= sum(i in Number_of_projects)e(k,i)
+
+  forall(i in Number_of_projects,k in Number_of_employees)
+    o(i,k) <= H*e(k,i)
+
+  forall(i in Number_of_projects)
+    sum(m in Department_Types) x(i,m) >= b(i)
+
+  forall(i in Number_of_projects, m in Department_Types)
+    x(i,m) <= a_im(i,m)
+
+  forall(i in Number_of_projects)
+    sum(k in Number_of_employees) (e(k,i)*8*30 + o(i,k)*d_ij(i,3)) >= R_i(i)*b(i)
+
+  x(1,1) >= w(1)
+  x(2,1) >= w(1)
+  x(1,1) + x(2,1) - 1 <= w(1)
+  x(3,3) <= 1-w(1)
+
+  forall(i in Number_of_projects)
+    (1-b(i))*d_ij(i,2) <= w(2)
+
+  forall(i in Number_of_projects)
+    (1-b(i))*d_ij(i,3) <= 1- w(2)
+
+
+  forall(i in Number_of_projects, m in Department_Types)
+    x(i,m) is_binary
+
+  forall(i in Number_of_projects, k in Number_of_employees)
+    e(k,i) is_binary
+
+  forall(i in Number_of_projects, k in Number_of_employees)
+    o(i,k) >= 0
+
+  forall(i in Number_of_projects)
+    b(i) is_binary
+
+  forall(k in Number_of_employees)
+    y(k) is_binary
+
+  forall(i in Number_of_projects)
+    w(i) is_binary
+  
+  profit=(sum(i in Number_of_projects, j in Difficulty_level)(d_ij(i,j)*b(i)*G_j(j)) - (sum(i in Number_of_projects)(P*(1-b(i))))- (sum(t in Employee_Types,i in Number_of_projects, k in Number_of_employees)(e(k,i)*S_t(t)*et_tk(t,k)))-(sum(i in Number_of_projects, k in Number_of_employees)o(i,k)*50))
+
+  
+  Objective := profit;
+  maximise(Objective)
+  
+
+  writeln("Begin running model")
+  !PRINTING OUT VARIABLE VALUES
+  forall(i in Number_of_projects, m in Department_Types) 
+    writeln("x","(",i,",",m,")","=", getsol(x(i,m)))
+  forall(k in Number_of_employees, i in Number_of_projects )
+    writeln("e","(",k,",",i,")","=",getsol(e(k,i)))
+  forall(i in Number_of_projects, k in Number_of_employees)
+    writeln("o","(",i,",",k,")","=",getsol(o(i,k)))
+  forall(i in Number_of_projects)
+    writeln("b", "(",i,")","=",getsol(b(i)))
+  forall(k in Number_of_employees)
+    writeln("y","(",k,")","=",getsol(y(k)))! body...! body...
+  !PRINTING OUT THE OBJECTIVE VALUE
+  writeln("Objective Value: ", getobjval)
+  !The values for B(t) variables can be seen from "solution" or "Matrix/Column View" section from the right.
+  writeln("End running model!")
+end-model
