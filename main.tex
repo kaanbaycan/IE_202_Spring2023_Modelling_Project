@@ -1,0 +1,244 @@
+\documentclass[11pt]{article}
+\def\thesection{\arabic{section}.}
+\def\thesubsection{\thesection\arabic{subsection}.}
+\topmargin -.5in
+\textheight 9in
+\oddsidemargin -.25in
+\evensidemargin -.25in
+\textwidth 7in
+\parskip .05in
+\parindent 0in
+\setcounter{secnumdepth}{0}
+
+\renewcommand \baselinestretch{1.1} 
+\scriptsize
+\include{psfig}
+\normalsize
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{geometry} 
+\usepackage{nccmath}
+\usepackage{cases}
+\usepackage{float}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\usepackage{framed,multirow}  
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{cases}
+\usepackage{tabularx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{blkarray, bigstrut}
+\usepackage{gauss}
+\usepackage{xcolor}
+\usepackage{epsfig}
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfdefinestyle{MyFrame}{%
+	linecolor=blue,
+        font = \small,
+	outerlinewidth=3pt,
+	roundcorner=20pt,
+	innertopmargin=\baselineskip,
+	innerbottommargin=\baselineskip,
+	innerrightmargin=20pt,
+        linewidth=0pt,
+	innerleftmargin=20pt,
+	backgroundcolor=gray!50!white,
+        }
+
+\newcommand{\ba}{\begin{array}}
+	\newcommand{\ea}{\end{array}}
+\newcommand{\bea}{\begin{eqnarray}}
+\newcommand{\eea}{\end{eqnarray}}
+
+
+\begin{document}
+\title{IE 202 INTRODUCTION TO MODELING AND OPTIMIZATION\\ TERM PROJECT\\STAGE 1 \\CONSULTING FIRM PROBLEM}
+\author{Group No: 22\\Yakup Kaan Baycan 22103383\\ Burak Ünal  22101836 \\ Dilara Demir  22003461}
+\maketitle
+\newpage
+
+	
+	\newcommand{\Pf}{\mathbf{P}}
+	\newcommand{\UP}[2]{\makebox[0pt]{\smash{\raisebox{1.5em}{$\phantom{#2}#1$}}}#2}
+	\newcommand{\LF}[1]{\makebox[0pt]{$#1$\hspace{4.5em}}}
+	
+\begin{center}
+{\bf CONSULTING FIRM PROBLEM}
+\end{center}
+A\&N is a consulting firm that operates in more than 30 countries. In this consulting firm, there are 6 different types of positions: associate, senior associate, manager, senior manager, director, and partner. In the Ankara office, there are K employees in total with different position levels.In addition, the A&N consulting firm gives services in M different departments in this office. We assume that all employee has enough knowledge of all departments. Our aim is to maximize the profit by completing projects.\\
+{\bf Assumptions:} 
+ \begin{enumerate} 
+   \item Each person can be assigned to one department only
+   \item Maximum number of hours which a person can work a day is $H/30$ (including extra hours).
+   \item Number of required hours for a project and the workload of a person is integer
+   \item Similarity between fierce competition is assumed to be less than or equal to 2
+   \item Position of the employees and difficulties of each project are determined at the start and taken as parameter.
+   \item For the functions as min(), max() we assume that while having a real problem we will know these constants and easily choose the maximum of them
+   \item Assignment and completing a project are considered two different aspects. For instance, a person may be assigned to a level 3 project in order to start assigning level 2 projects to others without considering whether he or she can complete the assigned level 3 project.
+   
+
+    \end{enumerate}
+{\bf English Description of Constraints:} 
+{\begin{align}
+
+   \item 1. Departments have to conduct at least one project.
+   \item 2. Every project can be assigned to only one department.
+   \item 3-4. Each personal have to assigned at least one project and also, have to be assigned at most five project.
+   \item 5-6. A personal working in a position in a project must have an upper and lower limit, if this constraint is provided, the qualification of the department is also provided.
+   \item 7. The time spent on a project (workload) equal or greater than  the time spent by the employee working on a project. (Since there are two options either project is finished than they are equal, second project is not finished)
+   \item 8. The usual salary an employee receives depends on the employee's assigned project and position.
+   \item 9. When the time spent on a project is added up monthly for any employee, the maximum working time in the month given in the question cannot be over H hours.
+   \item 10-11-12. Linerization every employee is assigned to only one department.
+   \item 13-14. Since Department 1 and Department 2 are in a competition and the number of projects assigned to them is similar, the difference in the number of projects between them should not be too much.
+   \item 15-16. If an employee is working more than the usual working time, the project they are working on should have a complexity level of 3.
+   \item 17-18. If Department 1 is conducting Projects 1 and 2, then Project 3 cannot be conducted in Department 3.
+   \item 19-20-21-22. The order in which projects are assigned is based on their level of complexity. If a project with difficulty level 3 is not assigned, a project with difficulty level 2 cannot be completed.
+   \item 23-24. Linearization of whether employee worked extra hour or not.
+   \item 25-26-27-28. Linearization of daily working hour and if employee has 3th level difficulty project's multiplication.
+   \item 29-30. Positivity constraints.
+   
+   \item Parameter $ s_{ps}$ meaning the position of the p-th person s being the position in the list [associate, senior associate, manager, senior manager, director, and partner] taking values from 1 to 6 respectively.
+    \end{align} 
+ 
+ {\bf Why this choice of variables:} 
+ \begin{enumerate} 
+   \item X variables are used to make sure that one project is assigned to only one department and every project is assigned to at least one department. 
+   \item W variables are used to determine any employee's workload (in terms of hours) for each project and by using this variable it is possible to check whether project is finished or not. 
+   \item Y decision variables are used to find which employees assigned to which projects. This helps the process while making sure any employee is assigned to maximum five projects, this variable also helps to meet the any project's employee requirements. For the first objective function this variable is also used to find employee costs since employees salaries are affected by the number of projects they are assigned to.
+   \item G variables are used to find overwork hour of any employee since overwork has additional cost and it is required for objective function one.
+   \item D variables are used to check whether an employee is assigned to third level project.
+   \item E variables are used to determine the number of p-th level projects assigned.
+   \item K variables are used to show which projects are finished since if the workload is not met for each project it can not be considered as finished and.
+   \item Z variables are used to linearize multiplication of G and P random variable.
+    
+    \end{enumerate}    
+    \pagebreak
+    \begin{mdframed}[style=MyFrame]
+{\textbf{Parameters:}}  
+\begin{fleqn}
+$c_i =$ penalty cost for $i$-th project, $i=1,2,\dots,N$
+
+$l_{is} =$ max limit on $i$-th project from $s$-th position, $i=1,2,\dots,N, s=1,2,\dots,6$
+
+$t_{is} =$ min limit on $i$-th project from $s$-th position, $i=1,2,\dots,N, s=1,2,\dots,6$
+
+$t_i =$ workload of $i$-th project, $i=1,2,\dots,N$
+
+$b_{ps} =$ salary of $p$-th personnel from $s$-th position per project, $p=1,2,\dots,K, \\ s=1,2,\dots,6$
+
+$m_p =$ usual salary of $p$-th personnel
+
+$s_{ps} =$ 1 if $p$-th personnel is from $s$-th position, $s=1,2,\dots,6, p=1,2,\dots,K$
+
+$r_i =$ number of $i$-th level projects, $i=1,2,\dots,N$
+
+$p_i =$ profit from $i$-th project, $i=1,2,\dots,N$ 
+\end{fleqn}
+
+\
+
+
+
+
+
+\end{mdframed}
+
+{\begin{mdframed}[style=MyFrame]
+{\textbf{Decision Variables:}}  
+\begin{fleqn}
+        
+$x_{ij} = \begin{cases} 1, &\text{if project $i$ is assigned to department  $j$}\ \\ 0, &\text{otherwise} \end{cases}$ $i \in \{1, 2, \dots, N\}$
+$j \in \{1, 2, \dots, M\}$
+
+$w_{pi}$ :  the workload of the $p$-th personnel on the $i$-th project. $i \in \{1, 2, \dots, N\}$
+        
+$y_{pi} = \begin{cases} 1, &\text{if personnel $p$ is assigned to project $i$}\ \\ 0, &\text{otherwise} \end{cases}$ $p \in \{1, 2, \dots, K\}$ $j \in \{1, 2, \dots, M\}$
+        
+$g_{pq}$ : the number of hours worked by the $p$-th personnel on $q$-th day.\\$p \in \{1, 2, \dots, K\}$ $q \in\{1,2,\dots, 30\}$
+        
+$d_p = \begin{cases} 1, &\text{if personnel $p$ is assigned to a level 3 project}\ \\ 0, &\text{otherwise} \end{cases}$ $p \in \{1, 2, \dots, K\}$
+        
+$e_{p}$ : the number of assigned p-th level projects p \in \{1, 2, 3\}$
+
+k_i = \begin{cases} 1, &\text{if project i is completed }\ \\ 0, &\text{otherwise} \end{cases}  i \in \{1, 2, \dots, N\}\\
+z_{pi} = g_{pq}\times d_p \  \ i \in \{1, 2, \dots, N\}   \ p \in \{1, 2, 3\} \  q \in\{1,2,\dots, 30\}
+\end{fleqn}
+\end{mdframed} }
+
+
+\pagebreak
+{\begin{mdframed}[style=MyFrame]
+{\textbf{Model (Equivalent Linear Form forcing z variables to take value 0):}
+
+{\begin{align}    
+
+    A) \max\left(-\sum_{i=1}^{N}\sum_{p=1}^{K}m_p w_{pi} + \sum_{i=1}^{N}p_i k_i - \sum_{i=1}^{N}c_i(1-k_i) - 50\sum_{i=1}^{N}\sum_{p=1}^{K}z_{pi} - 8d_p\right) \\
+    
+    B) \max\left(\sum_{i=1}^{N} k_i\right) \\
+    subject\  to\\
+    1.\quad 1 \leq \sum_{i=1}^{N} x_{ij} \quad j=1,2,\dots,M \ \\
+    2.\quad \sum_{j=1}^{M} x_{ij} \leq 1 \quad i=1,2,\dots,N \ \\
+    3.\quad 1 \leq \sum_{i=1}^{M} y_{pi} \quad p=1,2,\dots,K \ \\
+    4.\quad  \sum_{i=1}^{M} y_{pi} \leq 5 \quad p=1,2,\dots,K \ \\
+    5.\quad f_{is} \leq \sum_{p=1}^{K} y_{pi} \times s_{ps} \quad i=1,2,\dots,N, \quad s=1,2,\dots,6 \ \\
+    6.\quad \sum_{p=1}^{K} y_{pi} \times s_{ps} \leq l_{is} \quad i=1,2,\dots,N, \quad s=1,2,\dots,6 \ \\
+    7.\quad t_i \geq \sum_{p=1}^{K} w_{pi} \quad i=1,2,\dots,N \ \\
+    8.\quad m_p = \sum_{t=1}^{N} \sum_{s=1}^{6} b_{ps} \times y_{pi} \quad p=1,2,\dots,K \ \\
+    9.\quad \sum_{q=1}^{30} g_{pq} \leq H \quad p=1,2,\dots,K \ \\
+    10.\quad z_{1} \leq x_{ij} \quad i=1,2,\dots,N, \quad j=1,2,\dots,M \quad z_{1} \in \{0, 1\} \ \\
+    11.\quad z_{1} \leq y_{pi} \quad i=1,2,\dots,N, \quad p=1,2,\dots,K \quad z_{1} \in \{0, 1\}  \ \\
+    12.\quad z_{1} \geq x_{ij} + y_{pi} - 1 \quad i=1,2,\dots,N \quad j=1,2,\dots,M \quad p=1,2,\dots,K \quad z_{1} \in \{0, 1\} 
+    \ \\
+    13.\quad \sum_{i=1}^{N}(x_{i1}-x_{i2}) \leq 2 \quad i=1,2,\dots,N
+    \ \\
+    14.\quad -2 \leq \sum_{i=1}^{N}(x_{i1}-x_{i2}) \quad i=1,2,\dots,N
+    \ \\
+    15.\quad g_{pq} - 8 \leq (\frac{H}{30} - 8) \times z_{2}\ \qquad z_{2} \in \{0,1\}\quad p=1,2,\dots,K\quad q=1,2,\dots,30\\
+    16.\quad 1 - d_p \leq (\frac{H}{30} - 8)(1-z_{2}) \qquad z_{2} \in \{0,1\} \ \quad p=1,2,\dots,K \\
+    17.\quad x_{11} + x_{21} \leq z_{4} \qquad z_{4} \in \{0,1\} \ \\
+    18.\quad x_{33} \leq 1 - z_{5} \qquad z_{5} \in \{0,1\} \ \ \\
+    19.\quad e_{2} \leq max(r_{3}, r_{2})z_{6} \ \qquad z_{6} \in \{0,1\} \\
+    20.\quad r_{3} - e_{3} \leq max(r_{3},r_{2}) (1-z_{6}) \ \qquad z_{6} \in \{0,1\} \\
+    21.\quad e_{1}\leq max(r_{1}, r_{2}) z_{7} \ \qquad z_{7} \in \{0,1\} \  \\
+    22.\quad r_{2} - e_{2} \leq max(r_{1}, r_{2}) (1-z_{7}) \ \qquad z_{7} \in \{0,1\} \ \\
+    23.\quad \sum_{p=1}^{k} w_{pi} -t_{i} + 1 \leq z_{8} \quad p=1,2,\dots,K \quad i=1,2,\dots,N \qquad z_{8} \in \{0,1\} \quad  \\
+    24.\quad 1- k_{i} \leq (1-z_{8}) \ \qquad z_{8} \in \{0,1\} \quad i=1,2,\dots,N  \\
+\end{align}
+\end{mdframed}
+{\begin{mdframed}[style=MyFrame]
+{\textbf{Model (Equivalent Linear Form forcing z variables to take value 0):(cont)}
+
+{\begin{align}  
+
+    25.\quad z_{pi} \leq g_{pq}\quad p=1,2,\dots,K \quad i=1,2,\dots,N \quad q=1,2,\dots,30 \\
+    26.\quad z_{pi} \leq (\frac{H}{30})\ \qquad z_{pi} \in \{0,1\} \ \quad i=1,2,\dots,N \quad p=1,2,\dots,K \\
+    27.\quad w_{pi} \geq 0 \quad i=1,2,\dots,N \quad p=1,2,\dots,K \\ 
+    28.\quad g_{pq} \geq 0 \quad p=1,2,\dots,K\quad q=1,2,\dots,30 \\
+    29.\quad e_p \geq 0 \quad p=1,2,\dots,K \\
+    30.\quad z_{pi} \geq 0 \quad i=1,2,\dots,N  \quad p=1,2,\dots,K 
+\end{align}
+\end{mdframed}
+\\
+B) \max\left(\sum_{i=1}^{N} k_i\right) (a\ better\ looking\ function\ in\ the\ model!) \\
+
+Scenario A:
+In the question, it says, " Due to this, if a project with difficulty level 3 is
+left unassigned, then no project with difficulty level 2 can be completed." because of that, in order to complete many projects, we can satisfy the requirement by assigning level three and level two projects, respectively but completing the easier ones first. This can cause our profit to decrease or even money loss, but since our objective function aims to increase the number of completed projects, we would achieve our goal.
+
+Scenario B: 
+Since we do not have information about the values of the penalty costs of level three projects and the profit amount from finishing level one project, both objective functions can lead to the same output. To clarify the situation, completing level one projects may give us such profit that penalty costs of unfinished but assigned second and third-level projects can be negligible; in this case, we maximize profit and the number of completed projects at the same time.
+
+	
+	\end{document}
+\
